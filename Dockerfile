@@ -150,10 +150,9 @@ RUN if [ "$MODEL_TYPE" = "z-image-turbo" ]; then \
 
 # ACE-Step 1.5 - Geração de Música
 RUN if [ "$MODEL_TYPE" = "ace-step" ]; then \
-      uv pip install --no-cache-dir -U "huggingface_hub[cli]" && \
-      huggingface-cli download Comfy-Org/ACE-Step_ComfyUI_repackaged \
-        --local-dir models/checkpoints/ace_step \
-        --local-dir-use-symlinks False; \
+      mkdir -p models/checkpoints/ace_step/all_in_one && \
+      wget -q -O models/checkpoints/ace_step/all_in_one/ace_step_v1_3.5b.safetensors \
+        https://huggingface.co/Comfy-Org/ACE-Step_ComfyUI_repackaged/resolve/main/all_in_one/ace_step_v1_3.5b.safetensors; \
     fi
 
 # Stage 3: Final image
