@@ -1,120 +1,68 @@
 {
   "tests": [
     {
-      "name": "basic_test",
+      "name": "ace_step_basic_test",
       "input": {
-        "images": [
-          {
-            "name": "test.png",
-            "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAMklEQVR4nGI5ZdXAQEvARFPTRy0YtWDUglELRi0YtWDUglELRi0YtWDUAioCQAAAAP//E24Bx3jUKuYAAAAASUVORK5CYII="
-          }
-        ],
         "workflow": {
-          "6": {
+          "1": {
             "inputs": {
-              "text": "anime cat with massive fluffy fennec ears and a big fluffy tail blonde messy long hair blue eyes wearing a construction outfit placing a fancy black forest cake with candles on top of a dinner table of an old dark Victorian mansion lit by candlelight with a bright window to the foggy forest and very expensive stuff everywhere there are paintings on the walls",
-              "clip": ["30", 1]
+              "dcae_checkpoint": "ace_step/all_in_one/ace_step_v1_3.5b.safetensors",
+              "vocoder_checkpoint": "ace_step/all_in_one/ace_step_v1_3.5b.safetensors",
+              "ace_step_checkpoint": "ace_step/all_in_one/ace_step_v1_3.5b.safetensors",
+              "text_encoder_checkpoint": "ace_step/all_in_one/ace_step_v1_3.5b.safetensors",
+              "cpu_offload": false,
+              "torch_compile": false
             },
-            "class_type": "CLIPTextEncode",
+            "class_type": "ACEModelLoader",
             "_meta": {
-              "title": "CLIP Text Encode (Positive Prompt)"
+              "title": "ACE Model Loader"
             }
           },
-          "8": {
+          "2": {
             "inputs": {
-              "samples": ["31", 0],
-              "vae": ["30", 2]
+              "audio_duration": 10,
+              "infer_step": 8,
+              "guidance_scale": 7.0,
+              "scheduler_type": "euler",
+              "cfg_type": "apg",
+              "omega_scale": 10.0,
+              "seed": 42,
+              "guidance_interval": 0.5,
+              "guidance_interval_decay": 0.0,
+              "min_guidance_scale": 3.0,
+              "use_erg_tag": true,
+              "use_erg_lyric": false,
+              "use_erg_diffusion": true,
+              "oss_steps": 0,
+              "guidance_scale_text": 0.0,
+              "guidance_scale_lyric": 0.0
             },
-            "class_type": "VAEDecode",
+            "class_type": "GenerationParameters",
             "_meta": {
-              "title": "VAE Decode"
+              "title": "Generation Parameters"
             }
           },
-          "9": {
+          "3": {
             "inputs": {
-              "filename_prefix": "ComfyUI",
-              "images": ["8", 0]
+              "models": ["1", 0],
+              "prompt": "upbeat electronic dance music",
+              "negative_prompt": "noise, distortion",
+              "lyrics": "",
+              "parameters": ["2", 0],
+              "overlapped_decode": false
             },
-            "class_type": "SaveImage",
+            "class_type": "ACEStepGen",
             "_meta": {
-              "title": "Save Image"
+              "title": "ACE Step Generate"
             }
           },
-          "27": {
+          "4": {
             "inputs": {
-              "width": 512,
-              "height": 512,
-              "batch_size": 1
+              "audio": ["3", 0]
             },
-            "class_type": "EmptySD3LatentImage",
+            "class_type": "PreviewAudio",
             "_meta": {
-              "title": "EmptySD3LatentImage"
-            }
-          },
-          "30": {
-            "inputs": {
-              "ckpt_name": "flux1-dev-fp8.safetensors"
-            },
-            "class_type": "CheckpointLoaderSimple",
-            "_meta": {
-              "title": "Load Checkpoint"
-            }
-          },
-          "31": {
-            "inputs": {
-              "seed": 243057879077961,
-              "steps": 10,
-              "cfg": 1,
-              "sampler_name": "euler",
-              "scheduler": "simple",
-              "denoise": 1,
-              "model": ["30", 0],
-              "positive": ["35", 0],
-              "negative": ["33", 0],
-              "latent_image": ["27", 0]
-            },
-            "class_type": "KSampler",
-            "_meta": {
-              "title": "KSampler"
-            }
-          },
-          "33": {
-            "inputs": {
-              "text": "",
-              "clip": ["30", 1]
-            },
-            "class_type": "CLIPTextEncode",
-            "_meta": {
-              "title": "CLIP Text Encode (Negative Prompt)"
-            }
-          },
-          "35": {
-            "inputs": {
-              "guidance": 3.5,
-              "conditioning": ["6", 0]
-            },
-            "class_type": "FluxGuidance",
-            "_meta": {
-              "title": "FluxGuidance"
-            }
-          },
-          "38": {
-            "inputs": {
-              "images": ["8", 0]
-            },
-            "class_type": "PreviewImage",
-            "_meta": {
-              "title": "Preview Image"
-            }
-          },
-          "40": {
-            "inputs": {
-              "filename_prefix": "ComfyUI",
-              "images": ["8", 0]
-            },
-            "class_type": "SaveImage",
-            "_meta": {
-              "title": "Save Image"
+              "title": "Preview Audio"
             }
           }
         }
