@@ -92,6 +92,9 @@ COPY scripts/comfy-manager-set-mode.sh /usr/local/bin/comfy-manager-set-mode
 RUN chmod +x /usr/local/bin/comfy-manager-set-mode
 
 # ============ ACE-Step 1.5 ============
+# Instala transformers 4.44.0 (versão compatível com o modelo) e huggingface_hub
+RUN uv pip install --no-cache-dir transformers==4.44.0 huggingface_hub accelerate
+
 # Custom node para geração de música
 RUN cd /comfyui/custom_nodes && \
     git clone https://github.com/billwuhao/ComfyUI_ACE-Step.git && \
