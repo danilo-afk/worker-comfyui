@@ -149,10 +149,13 @@ RUN if [ "$MODEL_TYPE" = "z-image-turbo" ]; then \
     fi
 
 # ACE-Step 1.5 - Geração de Música
+# O custom node ComfyUI_ACE-Step espera modelos em /comfyui/models/TTS/
 RUN if [ "$MODEL_TYPE" = "ace-step" ]; then \
-      mkdir -p models/checkpoints/ace_step/all_in_one && \
-      wget -q -O models/checkpoints/ace_step/all_in_one/ace_step_v1_3.5b.safetensors \
-        https://huggingface.co/Comfy-Org/ACE-Step_ComfyUI_repackaged/resolve/main/all_in_one/ace_step_v1_3.5b.safetensors; \
+      uv pip install huggingface_hub && \
+      mkdir -p models/TTS && \
+      huggingface-cli download ACE-Step/ACE-Step-v1-3.5B \
+        --local-dir models/TTS/ACE-Step-v1-3.5B \
+        --local-dir-use-symlinks False; \
     fi
 
 # Stage 3: Final image
