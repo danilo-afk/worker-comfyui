@@ -151,9 +151,9 @@ RUN if [ "$MODEL_TYPE" = "z-image-turbo" ]; then \
 # ACE-Step 1.5 - Geração de Música
 # O custom node ComfyUI_ACE-Step espera modelos em /comfyui/models/TTS/
 RUN if [ "$MODEL_TYPE" = "ace-step" ]; then \
-      uv pip install huggingface_hub && \
+      uv pip install huggingface_hub[cli] && \
       mkdir -p models/TTS && \
-      huggingface-cli download ACE-Step/ACE-Step-v1-3.5B \
+      python -m huggingface_hub.commands.huggingface_cli download ACE-Step/ACE-Step-v1-3.5B \
         --local-dir models/TTS/ACE-Step-v1-3.5B \
         --local-dir-use-symlinks False; \
     fi
