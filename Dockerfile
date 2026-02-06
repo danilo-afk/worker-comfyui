@@ -154,11 +154,34 @@ RUN if [ "$MODEL_TYPE" = "z-image-turbo" ]; then \
 # ACE-Step 1.5 - Geração de Música
 # O custom node ComfyUI_ACE-Step espera modelos em /comfyui/models/TTS/
 RUN if [ "$MODEL_TYPE" = "ace-step" ]; then \
-      uv pip install huggingface_hub[cli] && \
-      mkdir -p models/TTS && \
-      python -m huggingface_hub.commands.huggingface_cli download ACE-Step/ACE-Step-v1-3.5B \
-        --local-dir models/TTS/ACE-Step-v1-3.5B \
-        --local-dir-use-symlinks False; \
+      mkdir -p models/TTS/ACE-Step-v1-3.5B/ace_step_transformer && \
+      mkdir -p models/TTS/ACE-Step-v1-3.5B/music_dcae_f8c8 && \
+      mkdir -p models/TTS/ACE-Step-v1-3.5B/music_vocoder && \
+      mkdir -p models/TTS/ACE-Step-v1-3.5B/umt5-base && \
+      wget -q -O models/TTS/ACE-Step-v1-3.5B/config.json \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/config.json && \
+      wget -q -O models/TTS/ACE-Step-v1-3.5B/ace_step_transformer/config.json \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/ace_step_transformer/config.json && \
+      wget -q -O models/TTS/ACE-Step-v1-3.5B/ace_step_transformer/diffusion_pytorch_model.safetensors \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/ace_step_transformer/diffusion_pytorch_model.safetensors && \
+      wget -q -O models/TTS/ACE-Step-v1-3.5B/music_dcae_f8c8/config.json \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/music_dcae_f8c8/config.json && \
+      wget -q -O models/TTS/ACE-Step-v1-3.5B/music_dcae_f8c8/diffusion_pytorch_model.safetensors \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/music_dcae_f8c8/diffusion_pytorch_model.safetensors && \
+      wget -q -O models/TTS/ACE-Step-v1-3.5B/music_vocoder/config.json \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/music_vocoder/config.json && \
+      wget -q -O models/TTS/ACE-Step-v1-3.5B/music_vocoder/diffusion_pytorch_model.safetensors \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/music_vocoder/diffusion_pytorch_model.safetensors && \
+      wget -q -O models/TTS/ACE-Step-v1-3.5B/umt5-base/config.json \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/config.json && \
+      wget -q -O models/TTS/ACE-Step-v1-3.5B/umt5-base/model.safetensors \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/model.safetensors && \
+      wget -q -O models/TTS/ACE-Step-v1-3.5B/umt5-base/tokenizer.json \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/tokenizer.json && \
+      wget -q -O models/TTS/ACE-Step-v1-3.5B/umt5-base/tokenizer_config.json \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/tokenizer_config.json && \
+      wget -q -O models/TTS/ACE-Step-v1-3.5B/umt5-base/special_tokens_map.json \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/special_tokens_map.json; \
     fi
 
 # Stage 3: Final image
