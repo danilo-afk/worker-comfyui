@@ -162,30 +162,38 @@ RUN if [ "$MODEL_TYPE" = "ace-step" ]; then \
       mkdir -p models/TTS/ACE-Step-v1-3.5B/music_dcae_f8c8 && \
       mkdir -p models/TTS/ACE-Step-v1-3.5B/music_vocoder && \
       mkdir -p models/TTS/ACE-Step-v1-3.5B/umt5-base && \
-      wget -q -O models/TTS/ACE-Step-v1-3.5B/config.json \
+      echo "Downloading ACE-Step config..." && \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/config.json \
         https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/config.json && \
-      wget -q -O models/TTS/ACE-Step-v1-3.5B/ace_step_transformer/config.json \
+      echo "Downloading ace_step_transformer..." && \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/ace_step_transformer/config.json \
         https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/ace_step_transformer/config.json && \
-      wget -q -O models/TTS/ACE-Step-v1-3.5B/ace_step_transformer/diffusion_pytorch_model.safetensors \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/ace_step_transformer/diffusion_pytorch_model.safetensors \
         https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/ace_step_transformer/diffusion_pytorch_model.safetensors && \
-      wget -q -O models/TTS/ACE-Step-v1-3.5B/music_dcae_f8c8/config.json \
+      echo "Downloading music_dcae_f8c8..." && \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/music_dcae_f8c8/config.json \
         https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/music_dcae_f8c8/config.json && \
-      wget -q -O models/TTS/ACE-Step-v1-3.5B/music_dcae_f8c8/diffusion_pytorch_model.safetensors \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/music_dcae_f8c8/diffusion_pytorch_model.safetensors \
         https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/music_dcae_f8c8/diffusion_pytorch_model.safetensors && \
-      wget -q -O models/TTS/ACE-Step-v1-3.5B/music_vocoder/config.json \
+      echo "Downloading music_vocoder..." && \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/music_vocoder/config.json \
         https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/music_vocoder/config.json && \
-      wget -q -O models/TTS/ACE-Step-v1-3.5B/music_vocoder/diffusion_pytorch_model.safetensors \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/music_vocoder/diffusion_pytorch_model.safetensors \
         https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/music_vocoder/diffusion_pytorch_model.safetensors && \
-      wget -q -O models/TTS/ACE-Step-v1-3.5B/umt5-base/config.json \
-        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/config.json && \
-      wget -q -O models/TTS/ACE-Step-v1-3.5B/umt5-base/model.safetensors \
-        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/model.safetensors && \
-      wget -q -O models/TTS/ACE-Step-v1-3.5B/umt5-base/tokenizer.json \
-        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/tokenizer.json && \
-      wget -q -O models/TTS/ACE-Step-v1-3.5B/umt5-base/tokenizer_config.json \
-        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/tokenizer_config.json && \
-      wget -q -O models/TTS/ACE-Step-v1-3.5B/umt5-base/special_tokens_map.json \
-        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/special_tokens_map.json; \
+      echo "Downloading UMT5 from Google (2.37GB)..." && \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/umt5-base/config.json \
+        https://huggingface.co/google/umt5-base/resolve/main/config.json && \
+      wget --progress=dot:giga --timeout=600 --tries=3 --continue -O models/TTS/ACE-Step-v1-3.5B/umt5-base/pytorch_model.bin \
+        https://huggingface.co/google/umt5-base/resolve/main/pytorch_model.bin && \
+      wget --progress=dot:giga --timeout=300 --tries=3 -O models/TTS/ACE-Step-v1-3.5B/umt5-base/tokenizer.json \
+        https://huggingface.co/google/umt5-base/resolve/main/tokenizer.json && \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/umt5-base/tokenizer_config.json \
+        https://huggingface.co/google/umt5-base/resolve/main/tokenizer_config.json && \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/umt5-base/special_tokens_map.json \
+        https://huggingface.co/google/umt5-base/resolve/main/special_tokens_map.json && \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/umt5-base/spiece.model \
+        https://huggingface.co/google/umt5-base/resolve/main/spiece.model && \
+      echo "ACE-Step models downloaded successfully!"; \
     fi
 
 # Stage 3: Final image
