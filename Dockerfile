@@ -181,9 +181,8 @@ RUN if [ "$MODEL_TYPE" = "ace-step" ]; then \
       wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/music_vocoder/diffusion_pytorch_model.safetensors \
         https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/music_vocoder/diffusion_pytorch_model.safetensors && \
       echo "Downloading UMT5 from Google (complete model)..." && \
-      huggingface-cli download google/umt5-base \
-        --local-dir models/TTS/ACE-Step-v1-3.5B/umt5-base \
-        --local-dir-use-symlinks False && \
+      HF_HUB_DISABLE_PROGRESS_BARS=1 huggingface-cli download google/umt5-base \
+        --local-dir models/TTS/ACE-Step-v1-3.5B/umt5-base && \
       echo "ACE-Step models downloaded successfully!"; \
     fi
 
