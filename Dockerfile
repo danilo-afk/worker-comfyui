@@ -184,8 +184,9 @@ RUN if [ "$MODEL_TYPE" = "ace-step" ]; then \
       HF_HUB_DISABLE_PROGRESS_BARS=1 huggingface-cli download google/umt5-base \
         --local-dir models/TTS/ACE-Step-v1-3.5B/umt5-base && \
       echo "Converting UMT5 pytorch_model.bin to model.safetensors..." && \
-      python -c "import torch; from safetensors.torch import save_file; sd = torch.load('models/TTS/ACE-Step-v1-3.5B/umt5-base/pytorch_model.bin', map_location='cpu', weights_only=True); save_file(sd, 'models/TTS/ACE-Step-v1-3.5B/umt5-base/model.safetensors'); print(f'Converted {len(sd)} tensors')" && \
-      rm -f models/TTS/ACE-Step-v1-3.5B/umt5-base/pytorch_model.bin && \
+      echo 'import torch; from safetensors.torch import save_file; p="models/TTS/ACE-Step-v1-3.5B/umt5-base"; sd=torch.load(p+"/pytorch_model.bin",map_location="cpu",weights_only=True); save_file(sd,p+"/model.safetensors"); print(f"Converted {len(sd)} tensors")' > /tmp/convert_umt5.py && \
+      python /tmp/convert_umt5.py && \
+      rm -f models/TTS/ACE-Step-v1-3.5B/umt5-base/pytorch_model.bin /tmp/convert_umt5.py && \
       echo "ACE-Step models downloaded successfully!"; \
     fi
 
