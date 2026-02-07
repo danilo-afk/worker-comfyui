@@ -180,9 +180,17 @@ RUN if [ "$MODEL_TYPE" = "ace-step" ]; then \
         https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/music_vocoder/config.json && \
       wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/music_vocoder/diffusion_pytorch_model.safetensors \
         https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/music_vocoder/diffusion_pytorch_model.safetensors && \
-      echo "Downloading UMT5 from Google (complete model)..." && \
-      HF_HUB_DISABLE_PROGRESS_BARS=1 huggingface-cli download google/umt5-base \
-        --local-dir models/TTS/ACE-Step-v1-3.5B/umt5-base && \
+      echo "Downloading umt5-base (encoder-only from ACE-Step repo)..." && \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/umt5-base/config.json \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/config.json && \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/umt5-base/model.safetensors \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/model.safetensors && \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/umt5-base/tokenizer.json \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/tokenizer.json && \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/umt5-base/tokenizer_config.json \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/tokenizer_config.json && \
+      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/umt5-base/special_tokens_map.json \
+        https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/umt5-base/special_tokens_map.json && \
       echo "ACE-Step models downloaded successfully!"; \
     fi
 
