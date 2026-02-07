@@ -180,19 +180,10 @@ RUN if [ "$MODEL_TYPE" = "ace-step" ]; then \
         https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/music_vocoder/config.json && \
       wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/music_vocoder/diffusion_pytorch_model.safetensors \
         https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B/resolve/main/music_vocoder/diffusion_pytorch_model.safetensors && \
-      echo "Downloading UMT5 from Google (2.37GB)..." && \
-      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/umt5-base/config.json \
-        https://huggingface.co/google/umt5-base/resolve/main/config.json && \
-      wget --progress=dot:giga --timeout=600 --tries=3 --continue -O models/TTS/ACE-Step-v1-3.5B/umt5-base/pytorch_model.bin \
-        https://huggingface.co/google/umt5-base/resolve/main/pytorch_model.bin && \
-      wget --progress=dot:giga --timeout=300 --tries=3 -O models/TTS/ACE-Step-v1-3.5B/umt5-base/tokenizer.json \
-        https://huggingface.co/google/umt5-base/resolve/main/tokenizer.json && \
-      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/umt5-base/tokenizer_config.json \
-        https://huggingface.co/google/umt5-base/resolve/main/tokenizer_config.json && \
-      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/umt5-base/special_tokens_map.json \
-        https://huggingface.co/google/umt5-base/resolve/main/special_tokens_map.json && \
-      wget --progress=dot:giga -O models/TTS/ACE-Step-v1-3.5B/umt5-base/spiece.model \
-        https://huggingface.co/google/umt5-base/resolve/main/spiece.model && \
+      echo "Downloading UMT5 from Google (complete model)..." && \
+      huggingface-cli download google/umt5-base \
+        --local-dir models/TTS/ACE-Step-v1-3.5B/umt5-base \
+        --local-dir-use-symlinks False && \
       echo "ACE-Step models downloaded successfully!"; \
     fi
 
