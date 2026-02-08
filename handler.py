@@ -14,6 +14,7 @@ import tempfile
 import socket
 import traceback
 import logging
+import subprocess
 
 from network_volume import (
     is_network_volume_debug_enabled,
@@ -137,6 +138,46 @@ def _attempt_websocket_reconnect(ws_url, max_attempts, delay_s, initial_error):
     raise websocket.WebSocketConnectionClosedException(
         f"Connection closed and failed to reconnect. Last error: {last_reconnect_error}"
     )
+
+
+def convert_audio_to_mp3(audio_bytes, filename):
+    """Converte áudio (FLAC/WAV) para MP3 via ffmpeg. Retorna (mp3_bytes, novo_filename)."""
+    ext = os.path.splitext(filename)[1].lower()
+    if ext == ".mp3":
+        return audio_bytes, filename
+
+    src_path = None
+    mp3_path = None
+    try:
+        src_path = os.path.join(tempfile.gettempdir(), f"src_{uuid.uuid4().hex}{ext}")
+        mp3_path = os.path.join(tempfile.gettempdir(), f"out_{uuid.uuid4().hex}.mp3")
+
+        with open(src_path, "wb") as f:
+            f.write(audio_bytes)
+
+        result = subprocess.run(
+            ["ffmpeg", "-i", src_path, "-codec:a", "libmp3lame", "-b:a", "192k", "-y", mp3_path],
+            capture_output=True,
+            timeout=120,
+        )
+
+        if result.returncode != 0:
+            print(f"worker-comfyui - ffmpeg error: {result.stderr.decode()}")
+            return audio_bytes, filename
+
+        with open(mp3_path, "rb") as f:
+            mp3_bytes = f.read()
+
+        new_filename = os.path.splitext(filename)[0] + ".mp3"
+        print(f"worker-comfyui - Converted {filename} ({len(audio_bytes)} bytes) -> {new_filename} ({len(mp3_bytes)} bytes)")
+        return mp3_bytes, new_filename
+    except Exception as e:
+        print(f"worker-comfyui - Conversion failed, keeping original: {e}")
+        return audio_bytes, filename
+    finally:
+        for p in [src_path, mp3_path]:
+            if p and os.path.exists(p):
+                os.remove(p)
 
 
 def validate_input(job_input):
@@ -793,6 +834,9 @@ def handler(job):
                     audio_bytes = get_image_data(filename, subfolder, audio_type)
                     if audio_bytes:
                         try:
+                            # Converte para MP3 se não for MP3
+                            audio_bytes, filename = convert_audio_to_mp3(audio_bytes, filename)
+
                             base64_audio = base64.b64encode(audio_bytes).decode("utf-8")
                             audio_data.append(
                                 {
